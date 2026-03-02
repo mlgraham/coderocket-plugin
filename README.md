@@ -14,8 +14,11 @@ Install the [CodeRocket Deploy GitHub App](https://github.com/apps/coderocket-de
 Go to **Settings > API Keys** and create a new key.
 
 ### 4. Install the plugin
-```bash
-/install coderocket
+
+In Claude Code, run:
+```
+/plugin marketplace add mlgraham/coderocket-plugin
+/plugin install coderocket@coderocket-marketplace
 ```
 
 ### 5. Set your API key
@@ -69,5 +72,5 @@ Visit [coderocket.com/pricing](https://coderocket.com/pricing) for details.
 ## Support
 
 - [Documentation](https://deploy.coderocket.com/docs)
-- [GitHub Issues](https://github.com/coderocket/claude-code-plugin/issues)
+- [GitHub Issues](https://github.com/mlgraham/coderocket-plugin/issues)
 - Email: support@coderocket.com
