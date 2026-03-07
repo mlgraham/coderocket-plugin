@@ -22,18 +22,13 @@ In Claude Code, run:
 ```
 
 ### 5. Set your API key
+
+Add to your shell profile (`~/.zshrc`, `~/.bashrc`, etc.):
 ```bash
 export CODEROCKET_API_KEY=crk_your_key_here
 ```
 
-Or add it to your `.claude/settings.json`:
-```json
-{
-  "env": {
-    "CODEROCKET_API_KEY": "crk_your_key_here"
-  }
-}
-```
+Then restart Claude Code (or open a new terminal) so the environment variable is available.
 
 ### 6. Deploy!
 ```
