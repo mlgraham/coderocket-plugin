@@ -63,8 +63,8 @@ That's it. CodeRocket analyzes your repo, generates a workflow, and creates a PR
 ## Pricing
 
 - **Free:** 100 generations/month, 3 repos
-- **Pro ($19/mo):** 1,000 generations/month, 20 repos
-- **Team ($49/mo):** 5,000 generations/month, unlimited repos
+- **Pro ($29/mo):** 1,000 generations/month, 20 repos
+- **Team ($99/mo):** 5,000 generations/month, unlimited repos
 
 Visit [deploy.coderocket.com](https://deploy.coderocket.com) for details.
 
