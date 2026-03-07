@@ -11,7 +11,7 @@
   "plugins": [
     {
       "name": "coderocket",
-      "source": ".",
+      "source": "./",
       "description": "AI-powered deployment automation. Generate CI/CD workflows, create PRs, and review code — all from Claude Code.",
       "version": "1.0.0",
       "author": {
