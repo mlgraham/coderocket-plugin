@@ -38,6 +38,9 @@ Repositories:
 ```
 
 ## Notes
-- If the API key is not set, show setup instructions
+- If the API key is not set, show setup instructions:
+  1. Create a key at https://deploy.coderocket.com/settings
+  2. Add `export CODEROCKET_API_KEY=crk_...` to `~/.zshrc` or `~/.bashrc`
+  3. Restart Claude Code
 - If the health check fails, show troubleshooting steps
 - Highlight any usage approaching limits
