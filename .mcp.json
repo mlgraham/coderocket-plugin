@@ -1,11 +1,9 @@
 {
-  "mcpServers": {
-    "coderocket": {
-      "type": "http",
-      "url": "https://deploy.coderocket.com/api/v1/mcp/",
-      "headers": {
-        "Authorization": "Bearer ${CODEROCKET_API_KEY}"
-      }
+  "coderocket": {
+    "type": "http",
+    "url": "https://deploy.coderocket.com/api/v1/mcp/",
+    "headers": {
+      "Authorization": "Bearer ${CODEROCKET_API_KEY}"
     }
   }
 }

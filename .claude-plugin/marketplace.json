@@ -5,7 +5,7 @@
     "email": "support@coderocket.com"
   },
   "metadata": {
-    "description": "CodeRocket Deploy plugins for Claude Code - AI-powered deployment automation, code review, and CI/CD generation.",
+    "description": "CodeRocket Deploy for Claude Code - generate production-ready CI/CD workflows for any stack. Analyze, generate, and deploy via GitHub Actions in 60 seconds.",
     "version": "1.0.0"
   },
   "plugins": [

@@ -39,7 +39,9 @@ Repositories:
 
 ## Notes
 - If authentication fails, show setup instructions:
-  1. Create a key at https://deploy.coderocket.com/settings
-  2. Claude Code will prompt you to enter your API key when the plugin connects
+  1. Sign up at https://deploy.coderocket.com (GitHub login)
+  2. Install the CodeRocket Deploy GitHub App on your repos
+  3. Go to Settings > API Keys and create a key (starts with `crk_`)
+  4. Set `CODEROCKET_API_KEY` when Claude Code prompts for it, or export it in your shell
 - If the health check fails, show troubleshooting steps
 - Highlight any usage approaching limits
