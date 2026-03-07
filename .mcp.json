@@ -2,7 +2,7 @@
   "mcpServers": {
     "coderocket": {
       "command": "npx",
-      "args": ["-y", "@mlgraham/coderocket-mcp@1.0.0"],
+      "args": ["-y", "@mlgraham/coderocket-mcp@1.0.1"],
       "env": {
         "CODEROCKET_API_URL": "https://deploy.coderocket.com/api/v1"
       }
