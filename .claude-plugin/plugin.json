@@ -1,6 +1,6 @@
 {
   "name": "coderocket",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "displayName": "CodeRocket Deploy",
   "description": "AI-powered deployment automation. Generate CI/CD workflows, create PRs, and review code — all from Claude Code.",
   "author": {
@@ -11,5 +11,17 @@
   "repository": "https://github.com/mlgraham/coderocket-plugin",
   "license": "MIT",
   "categories": ["deployment", "devops", "ci-cd"],
-  "keywords": ["deploy", "ci/cd", "github-actions", "devops", "workflow", "coderocket"]
+  "keywords": ["deploy", "ci/cd", "github-actions", "devops", "workflow", "code-review", "coderocket"],
+  "commands": ["./commands/"],
+  "skills": ["./skills/"],
+  "mcpServers": {
+    "coderocket": {
+      "command": "npx",
+      "args": ["-y", "@mlgraham/coderocket-mcp@latest"],
+      "env": {
+        "CODEROCKET_API_KEY": "",
+        "CODEROCKET_API_URL": "https://deploy.coderocket.com/api/v1"
+      }
+    }
+  }
 }
