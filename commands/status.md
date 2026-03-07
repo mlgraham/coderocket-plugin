@@ -38,9 +38,8 @@ Repositories:
 ```
 
 ## Notes
-- If the API key is not set, show setup instructions:
+- If authentication fails, show setup instructions:
   1. Create a key at https://deploy.coderocket.com/settings
-  2. Add `export CODEROCKET_API_KEY=crk_...` to `~/.zshrc` or `~/.bashrc`
-  3. Restart Claude Code
+  2. Claude Code will prompt you to enter your API key when the plugin connects
 - If the health check fails, show troubleshooting steps
 - Highlight any usage approaching limits

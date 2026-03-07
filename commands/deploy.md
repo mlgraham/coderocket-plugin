@@ -9,13 +9,12 @@ You are helping the user deploy their project using CodeRocket Deploy. Follow th
 ### Step 1: Check connectivity
 Call the `health_check` tool to verify the CodeRocket API is reachable and the API key is configured.
 
-If the health check fails due to a missing API key, tell the user:
+If the health check fails due to authentication, tell the user:
 > To use CodeRocket Deploy, you need an API key:
 > 1. Sign up at https://deploy.coderocket.com
 > 2. Install the GitHub App on your repositories
 > 3. Go to **Settings > API Keys** and create a key
-> 4. Add to your shell profile (`~/.zshrc` or `~/.bashrc`): `export CODEROCKET_API_KEY=crk_...`
-> 5. Restart Claude Code so the plugin picks up the key
+> 4. Claude Code will prompt you to enter the key when the plugin connects
 
 ### Step 2: List repositories
 Call `list_repos` to show the user their connected repositories. Present them as a numbered list showing:

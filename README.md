@@ -21,16 +21,7 @@ In Claude Code, run:
 /plugin install coderocket@coderocket-marketplace
 ```
 
-### 5. Set your API key
-
-Add to your shell profile (`~/.zshrc`, `~/.bashrc`, etc.):
-```bash
-export CODEROCKET_API_KEY=crk_your_key_here
-```
-
-Then restart Claude Code (or open a new terminal) so the environment variable is available.
-
-### 6. Deploy!
+### 5. Deploy!
 ```
 /coderocket:deploy
 ```
