@@ -1,9 +1,10 @@
 {
   "coderocket": {
-    "type": "http",
-    "url": "https://deploy.coderocket.com/api/v1/mcp/",
-    "headers": {
-      "Authorization": "Bearer ${CODEROCKET_API_KEY:-}"
+    "type": "stdio",
+    "command": "npx",
+    "args": ["-y", "@mlgraham/coderocket-mcp@1.0.0"],
+    "env": {
+      "CODEROCKET_API_KEY": "${CODEROCKET_API_KEY:-}"
     }
   }
 }
