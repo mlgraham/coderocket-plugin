@@ -224,8 +224,7 @@ the latest entry in [CHANGELOG.md](CHANGELOG.md).
 ## Versioning
 
 The plugin and the MCP server are separate artifacts with independent version numbers. The
-plugin's version lives in `.claude-plugin/plugin.json` (and, for Cursor, in
-`.cursor-plugin/plugin.json` — the two are bumped together); the server
+plugin's version lives in `.claude-plugin/plugin.json`; the server
 ([`@mlgraham/coderocket-mcp`](https://www.npmjs.com/package/@mlgraham/coderocket-mcp)) is
 pinned to an exact version in `.mcp.json`. Changes to both are recorded in
 [CHANGELOG.md](CHANGELOG.md), and each release is tagged `coderocket--v<version>` via
@@ -233,9 +232,11 @@ pinned to an exact version in `.mcp.json`. Changes to both are recorded in
 
 ### Editor support
 
-Claude Code reads `.claude-plugin/plugin.json` and `.mcp.json`. Cursor reads
-`.cursor-plugin/plugin.json` and `mcp.json`. The two sets sit side by side and neither
-editor picks up the other's files — Claude Code discovers only the dotted `.mcp.json`.
+This branch targets **Claude Code only**: `.claude-plugin/plugin.json` declares the plugin
+and `.mcp.json` declares exactly one MCP server. Cursor packaging lives on the
+[`cursor-marketplace`](https://github.com/mlgraham/coderocket-plugin/tree/cursor-marketplace)
+branch — it is deliberately kept off `main` so this repo ships a single, unambiguous MCP
+server declaration.
 
 Licensed MIT — see [LICENSE](LICENSE).
 

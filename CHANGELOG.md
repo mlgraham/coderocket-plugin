@@ -1,7 +1,8 @@
 # Changelog
 
-All notable changes to the **CodeRocket plugin** — for Claude Code and, as of 1.2.0,
-Cursor — are documented here.
+All notable changes to the **CodeRocket plugin** for Claude Code are documented here.
+Cursor packaging shipped on `main` in 1.2.0 and moved to the `cursor-marketplace` branch
+in 1.2.2 — see that entry for why.
 
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.1.0/), and this
 project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
@@ -10,8 +11,8 @@ project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 This repository ships the **plugin**. The MCP server it talks to,
 [`@mlgraham/coderocket-mcp`](https://www.npmjs.com/package/@mlgraham/coderocket-mcp),
-is a separate npm package with its own version, pinned exactly in `.mcp.json` (Claude
-Code) and `mcp.json` (Cursor).
+is a separate npm package with its own version, pinned exactly in `.mcp.json` — the one
+and only MCP server declaration on this branch.
 They are versioned independently and the numbers are not expected to match — a
 plugin release may pin an unchanged server, and a server patch may ship without a
 plugin release. Every plugin entry below records which server version it pinned.
@@ -24,10 +25,9 @@ the plugin installed can keep loading the previously cached copy. **Every publis
 change must bump the version**, or it may not reach users.
 
 1. Make the change.
-2. Bump `version` in **both** `.claude-plugin/plugin.json` and `.cursor-plugin/plugin.json`
-   — the tooling in step 4 checks only the Claude one.
-3. If the MCP server version changed, update the pin in **both** `.mcp.json` (Claude,
-   flat, `${VAR:-}`) and `mcp.json` (Cursor, wrapped, `${VAR}`).
+2. Bump `version` in `.claude-plugin/plugin.json`.
+3. If the MCP server version changed, update the pin in `.mcp.json` (flat, `${VAR:-}`).
+   **Do not add a second MCP declaration to this branch** — see 1.2.2.
 4. Add an entry here under a new heading.
 5. Commit, then tag the release with Claude Code's own tooling:
 
@@ -43,6 +43,55 @@ change must bump the version**, or it may not reach users.
    separately (`--push`), once the release is meant to be public.
 
 ---
+
+## [1.2.2] — 2026-07-29
+
+Packaging correctness on the live distribution path. Removes the second MCP server
+declaration and the Cursor manifest from `main`, so this branch presents exactly one
+`coderocket` MCP server. Pins `@mlgraham/coderocket-mcp@1.0.2` (unchanged). No change to
+command or skill behaviour.
+
+### Why
+
+The Anthropic community marketplace pins this repo by commit SHA. The automated bump PR
+for 1.2.0 ([#1556](https://github.com/anthropics/claude-plugins-community/pull/1556)) passed
+both automated checks and then sat unmerged while its immediate neighbours — PRs 1548–1555
+and 1557 — were all merged by a maintainer within the same hour. A contiguous run of merges
+with exactly one gap is a deliberate skip, not queue position or a batch cap, and this repo
+is not on the marketplace's freeze list.
+
+The likeliest objection is visible in the 1.2.0 diff: it added `mcp.json` **alongside** the
+existing `.mcp.json`, so a single plugin declared a server named `coderocket` twice, each
+copy carrying `CODEROCKET_API_KEY`. Two credential-bearing MCP declarations in one plugin is
+a reasonable thing for a reviewer or a security scan to stop on, and duplicate registration
+is a known Claude Code failure mode regardless of who is reviewing. The same diff also
+introduced `.cursor-plugin/plugin.json`, a competing editor's manifest carrying a
+`displayName` key that the Claude Code validator rejects.
+
+Both are removed here rather than defended. This is a hypothesis about the skip, not a
+confirmed cause — no reviewer feedback was given. If the next automated bump PR is skipped
+again, the cause lies elsewhere and the escalation path is the
+[plugin directory submission form](https://clau.de/plugin-directory-submission); pull
+requests opened directly against the marketplace repo are closed automatically.
+
+### Removed
+
+- **`mcp.json`** (Cursor's wrapped `mcpServers` format). `.mcp.json` is now the only MCP
+  server declaration on `main`.
+- **`.cursor-plugin/plugin.json`**. `displayName` is valid in Cursor and **invalid in the
+  Claude Code plugin manifest schema** — it was one of the keys removed in `3a5ea90` while
+  fixing a failed install.
+
+Both files are preserved on the
+[`cursor-marketplace`](https://github.com/mlgraham/coderocket-plugin/tree/cursor-marketplace)
+branch, cut from the 1.2.1 tree. Cursor's marketplace reads a submitted repository
+reference, so a branch remains a viable source for that channel; nothing is lost.
+
+### Changed
+
+- README "Editor support" now states the single-server invariant and points at the branch.
+- Release checklist no longer instructs bumping two manifests or two MCP pins, and now says
+  explicitly not to add a second MCP declaration to `main`.
 
 ## [1.2.1] — 2026-07-29
 
