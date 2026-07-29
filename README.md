@@ -1,107 +1,229 @@
-# CodeRocket Deploy - Claude Code Plugin
+# CodeRocket for Claude Code
 
-Generate production-ready CI/CD workflows for any codebase, directly from Claude Code. CodeRocket analyzes your repo, builds a GitHub Actions pipeline tailored to your stack, and opens a PR — zero to deployed in 60 seconds.
+Generate production-ready CI/CD workflows without leaving Claude Code. CodeRocket reads
+your repository, works out how it should be built and shipped, writes the GitHub Actions
+pipeline, and opens a pull request — typically in under a minute. It then reviews the pull
+requests that follow.
+
+```
+/coderocket:deploy
+```
+
+---
 
 ## What it does
 
-1. **Analyze** — Scans your repository to detect language, framework, and deployment target
-2. **Generate** — AI builds a production-ready GitHub Actions workflow for your stack
-3. **Deploy** — Creates a PR with the workflow YAML — merge it and you're live
+| | |
+|---|---|
+| **Analyze** | Scans the repository and detects language, framework, and deploy target |
+| **Generate** | Writes a GitHub Actions workflow for that specific stack — no template copy-paste |
+| **Open a PR** | Delivers the workflow as a pull request with a plain-English explanation, so you review before anything runs |
+| **Review** | Reads subsequent pull requests and posts inline findings by severity |
 
-No more copy-pasting workflow templates or debugging YAML indentation. CodeRocket handles the entire CI/CD setup.
+Nothing is pushed to your default branch. Every change arrives as a pull request you can
+edit or close.
 
 ## Supported stacks
 
-- **Languages:** JavaScript/TypeScript, Python, Go, Rust, Java, Ruby, PHP, C#/.NET
-- **Frameworks:** React, Next.js, Vue, Angular, Django, Flask, FastAPI, Express, Rails, Laravel, Spring Boot
-- **Deploy targets:** AWS, GCP, Azure, Vercel, Netlify, Fly.io, Railway, Render, Docker/K8s
+- **Languages** — JavaScript/TypeScript, Python, Go, Rust, Java, Ruby, PHP, C#/.NET
+- **Frameworks** — React, Next.js, Vue, Angular, Django, Flask, FastAPI, Express, Rails, Laravel, Spring Boot
+- **Deploy targets** — AWS, GCP, Azure, Vercel, Netlify, Fly.io, Railway, Render, Docker/K8s
 
-## Prerequisites
+## Requirements
 
-- **Node.js 18+** — required for the MCP server (runs via `npx`)
-- **Claude Code** — the plugin runs inside Claude Code
+- **Claude Code** — the plugin runs inside it
+- **Node.js 18+** — the MCP server runs via `npx`
+- A free CodeRocket account at [deploy.coderocket.com](https://deploy.coderocket.com)
 
-## Quick Start
+---
 
-### 1. Sign up for CodeRocket Deploy
-Visit [deploy.coderocket.com](https://deploy.coderocket.com) and sign in with GitHub.
+## Setup
 
-### 2. Install the GitHub App
-Install the [CodeRocket Deploy GitHub App](https://github.com/apps/coderocket-deploy) on your repositories.
+> **Do the API key step before installing.** The MCP server reads `CODEROCKET_API_KEY`
+> from your environment **once, at startup**. Claude Code will **never prompt you for
+> it** — if the variable is missing the server still starts, and every CodeRocket tool
+> simply reports that no key is configured.
 
-### 3. Generate an API key
-Go to **Settings > API Keys** at [deploy.coderocket.com/settings](https://deploy.coderocket.com/settings) and create a new key. Keys start with `crk_`.
+### 1. Create an account and connect GitHub
 
-### 4. Set your API key
+Sign in at [deploy.coderocket.com](https://deploy.coderocket.com) with GitHub, then install
+the [CodeRocket GitHub App](https://github.com/apps/coderocket-deploy) on the repositories
+you want it to work with. Private repositories are supported; permissions are minimal and
+revocable.
+
+### 2. Generate an API key
+
+**Settings → API Keys** at
+[deploy.coderocket.com/settings](https://deploy.coderocket.com/settings). Keys begin with
+`crk_`. Copy it now — it is shown once.
+
+### 3. Put the key in your shell profile
 
 ```bash
-export CODEROCKET_API_KEY=crk_your_key_here
+echo 'export CODEROCKET_API_KEY=crk_your_key_here' >> ~/.zshrc   # or ~/.bashrc
+source ~/.zshrc
 ```
 
-Add this to your shell profile (`~/.zshrc` or `~/.bashrc`) to persist across sessions.
+Confirm it is set, in the same shell you will launch Claude Code from:
 
-### 5. Install the plugin
+```bash
+echo $CODEROCKET_API_KEY
+```
 
-In Claude Code, run these commands:
+### 4. Install the plugin
+
+In Claude Code:
 
 ```
 /plugin marketplace add mlgraham/coderocket-plugin
 /plugin install coderocket@coderocket-marketplace
 ```
 
-Or from the CLI:
+Or from your terminal:
 
 ```bash
 claude plugin marketplace add mlgraham/coderocket-plugin
 claude plugin install coderocket@coderocket-marketplace
 ```
 
-### 6. Deploy!
+### 5. Restart Claude Code
+
+Required. A session that was already running started the MCP server with the old
+environment and will not pick up a newly exported key.
+
+### 6. Check it works
 
 ```
-/coderocket:deploy
+/coderocket:status
 ```
 
-That's it. CodeRocket analyzes your repo, generates a workflow, and creates a PR.
+A healthy result reports API connectivity, your account tier, and usage this month.
+
+---
 
 ## Commands
 
-| Command | Description |
-|---------|-------------|
-| `/coderocket:deploy` | Generate a CI/CD workflow and create a PR |
-| `/coderocket:status` | Check account status, usage, and connected repos |
+### `/coderocket:deploy`
+
+Generate a CI/CD workflow for the current project and open a pull request.
+
+Checks connectivity, finds the repository, analyzes the stack, shows you what it detected
+and what the pipeline will do, and opens the PR once you approve. If the repository is not
+connected yet, it tells you what to install.
+
+### `/coderocket:review`
+
+View AI code reviews for your pull requests.
+
+Lists recent reviews with PR title, repository, severity counts, and status, and drills
+into a single review to show the individual findings and the lines they apply to. Reviews
+are produced automatically for pull requests on connected repositories — this command reads
+them; it does not trigger them.
+
+### `/coderocket:status`
+
+Account and system dashboard: API health, account tier, usage against your monthly
+allowance, connected repositories, and recent activity. Run this first whenever something
+looks wrong.
+
+---
+
+## Example
+
+```
+> /coderocket:deploy
+
+  Checking CodeRocket connectivity...            ok
+  Repository: acme/storefront                    connected
+
+  Detected
+    Language    Python 3.12
+    Framework   Django 5
+    Services    PostgreSQL
+    Target      AWS ECS (Fargate)
+
+  Proposed pipeline: .github/workflows/deploy.yml
+    test → build → migrate → deploy → smoke test
+
+  Generate this workflow and open a pull request? (y/n) y
+
+  Pull request #41 opened  ·  +118 −0
+  https://github.com/acme/storefront/pull/41
+```
+
+Merge the PR and the next push to your default branch deploys.
+
+---
 
 ## Pricing
 
-- **Free:** 100 generations/month, 3 repos
-- **Pro ($29/mo):** 1,000 generations/month, 20 repos
-- **Team ($99/mo):** 5,000 generations/month, unlimited repos
+| Plan | Generations / month | Code reviews / month | Repositories |
+|---|---|---|---|
+| **Free** | 100 | 50 | 3 |
+| **Pro** — $29/mo | 1,000 | 500 | 20 |
+| **Team** — $99/mo | 5,000 | Unlimited | Unlimited |
 
-Visit [deploy.coderocket.com](https://deploy.coderocket.com) for details.
+No credit card required for the free tier. See
+[deploy.coderocket.com](https://deploy.coderocket.com) for current details.
+
+---
 
 ## Troubleshooting
 
+### Tools report that the API key is not configured
+
+The most common setup problem, and the one that looks like nothing happening at all.
+Claude Code does not prompt for the key — it must be in the environment **before** Claude
+Code starts.
+
+1. `echo $CODEROCKET_API_KEY` in the shell you launch Claude Code from. Empty means the
+   export did not persist — check it is in `~/.zshrc` or `~/.bashrc`, not just typed into a
+   one-off shell.
+2. Confirm the key begins with `crk_`.
+3. Restart Claude Code. The server reads the variable once at startup.
+
+### "API key has been revoked"
+
+The key was deliberately revoked from **Settings → API Keys**. It cannot be reinstated —
+generate a new one, update your shell profile, and restart Claude Code. (This message is
+distinct from "Invalid API key", which means the key does not exist, and from "API key has
+expired".)
+
 ### MCP server won't connect
-- Verify `CODEROCKET_API_KEY` is set in your environment: `echo $CODEROCKET_API_KEY`
-- Check the key starts with `crk_` and hasn't been revoked
-- Make sure Node.js 18+ is installed: `node --version`
-- Run `/coderocket:status` to test connectivity
 
-### Commands not showing up
-- Run `/reload-plugins` to reload all plugins
-- Or restart Claude Code to pick up plugin changes
+- `node --version` — must be 18 or newer
+- Open `/plugin` and check the **Errors** tab
+- `claude --debug` prints verbose plugin and MCP loading output
 
-### Plugin update
+### Commands don't appear
+
+- `/reload-plugins`, or restart Claude Code
+- Confirm the install: `/plugin` should list **coderocket**
+
+### Updating
+
 ```bash
 claude plugin marketplace update coderocket-marketplace
 claude plugin update coderocket@coderocket-marketplace
 ```
 
-### Plugin errors
-- Open `/plugin` and check the **Errors** tab for details
-- Run `claude --debug` for verbose plugin loading output
+If an update does not seem to take effect, check the installed version in `/plugin` against
+the latest entry in [CHANGELOG.md](CHANGELOG.md).
+
+---
+
+## Versioning
+
+The plugin and the MCP server are separate artifacts with independent version numbers. The
+plugin's version lives in `.claude-plugin/plugin.json`; the server
+([`@mlgraham/coderocket-mcp`](https://www.npmjs.com/package/@mlgraham/coderocket-mcp)) is
+pinned to an exact version in `.mcp.json`. Changes to both are recorded in
+[CHANGELOG.md](CHANGELOG.md), and each release is tagged `coderocket--v<version>` via
+`claude plugin tag`.
 
 ## Support
 
 - [GitHub Issues](https://github.com/mlgraham/coderocket-plugin/issues)
-- Email: support@coderocket.com
+- support@coderocket.com
+
+MIT licensed.

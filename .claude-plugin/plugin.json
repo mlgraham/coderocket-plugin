@@ -1,5 +1,6 @@
 {
   "name": "coderocket",
+  "version": "1.1.0",
   "description": "Generate production-ready CI/CD workflows from any codebase. CodeRocket analyzes your repo, builds a GitHub Actions pipeline, and opens a PR — zero to deployed in 60 seconds. Supports 8 languages, 15+ frameworks, and every major cloud platform.",
   "author": {
     "name": "CodeRocket",

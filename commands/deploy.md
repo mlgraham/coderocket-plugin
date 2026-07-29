@@ -1,3 +1,7 @@
+---
+description: Generate a CI/CD workflow for this project and open a pull request
+---
+
 # /coderocket:deploy
 
 Generate a CI/CD workflow for your project and create a GitHub PR.

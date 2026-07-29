@@ -1,3 +1,7 @@
+---
+description: View AI code reviews and findings for your pull requests
+---
+
 # /coderocket:review
 
 View AI-powered code reviews for your pull requests.

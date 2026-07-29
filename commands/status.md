@@ -1,3 +1,7 @@
+---
+description: Check CodeRocket account status, API health, usage, and connected repos
+---
+
 # /coderocket:status
 
 Check your CodeRocket account status, API health, and repository summary.

@@ -1,3 +1,8 @@
+---
+name: cicd-generation
+description: Generate production-ready CI/CD pipelines for a repository with CodeRocket. Use when the user wants to deploy an application, set up or fix continuous integration or deployment, write or debug a GitHub Actions workflow, add build/test/deploy stages, or ship to AWS, GCP, Azure, Vercel, Netlify, Fly.io, Railway, Render, Heroku, or Docker/Kubernetes. Triggers on "deploy", "CI/CD", "GitHub Actions", "pipeline", "workflow YAML", "get this to production".
+---
+
 # CI/CD Generation Skill
 
 This skill is auto-invoked when the user discusses deployment, CI/CD pipelines, GitHub Actions workflows, or DevOps topics in the context of their project.
