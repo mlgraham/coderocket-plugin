@@ -43,9 +43,14 @@ Repositories:
 
 ## Notes
 - If authentication fails, show setup instructions:
-  1. Sign up at https://deploy.coderocket.com (GitHub login)
-  2. Install the CodeRocket Deploy GitHub App on your repos
-  3. Go to Settings > API Keys and create a key (starts with `crk_`)
-  4. Set `CODEROCKET_API_KEY` when Claude Code prompts for it, or export it in your shell
+  1. Sign up at https://deploy.coderocket.com
+  2. Install the GitHub App on your repositories
+  3. Go to Settings > API Keys and create a key
+  4. Add to your shell profile (~/.zshrc or ~/.bashrc): export CODEROCKET_API_KEY=crk_your_key_here
+  5. Restart Claude Code (the MCP server reads the key from your shell environment on startup)
+
+  Never tell the user that Claude Code will ask them for the key — it cannot. The MCP
+  server reads the environment once at startup and starts successfully without a key, so
+  a user waiting to be asked waits forever.
 - If the health check fails, show troubleshooting steps
 - Highlight any usage approaching limits

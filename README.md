@@ -64,11 +64,16 @@ echo 'export CODEROCKET_API_KEY=crk_your_key_here' >> ~/.zshrc   # or ~/.bashrc
 source ~/.zshrc
 ```
 
-Confirm it is set, in the same shell you will launch Claude Code from:
+Confirm it is **exported**, in the same shell you will launch Claude Code from:
 
 ```bash
-echo $CODEROCKET_API_KEY
+printenv CODEROCKET_API_KEY
 ```
+
+`printenv` reads the exported environment — the same thing Claude Code hands to the MCP
+server. It prints nothing and exits non-zero when the variable is not there. Do not verify
+with `echo`: that also prints a variable that was assigned but never exported, so it
+reports success in exactly the case the MCP server sees nothing.
 
 ### 4. Install the plugin
 
@@ -176,11 +181,15 @@ The most common setup problem, and the one that looks like nothing happening at 
 Claude Code does not prompt for the key — it must be in the environment **before** Claude
 Code starts.
 
-1. `echo $CODEROCKET_API_KEY` in the shell you launch Claude Code from. Empty means the
-   export did not persist — check it is in `~/.zshrc` or `~/.bashrc`, not just typed into a
-   one-off shell.
+1. `printenv CODEROCKET_API_KEY`, in a fresh terminal — not the one Claude Code is running
+   in. No output means the key is not in the exported environment. Check that `~/.zshrc` or
+   `~/.bashrc` contains the line, that it says `export CODEROCKET_API_KEY=...` and not a
+   bare `CODEROCKET_API_KEY=...`, and that it was not just typed into a one-off shell.
 2. Confirm the key begins with `crk_`.
-3. Restart Claude Code. The server reads the variable once at startup.
+3. Start Claude Code **from that same shell**. The order is the whole problem: the server
+   reads the variable once, at startup, so the export has to already be in the environment
+   of the process that launches it. Exporting into a shell that Claude Code is already
+   running in changes nothing until you restart it.
 
 ### "API key has been revoked"
 

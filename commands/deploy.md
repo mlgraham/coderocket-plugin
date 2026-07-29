@@ -17,8 +17,13 @@ If the health check fails due to authentication, tell the user:
 > To use CodeRocket Deploy, you need an API key:
 > 1. Sign up at https://deploy.coderocket.com
 > 2. Install the GitHub App on your repositories
-> 3. Go to **Settings > API Keys** and create a key
-> 4. Claude Code will prompt you to enter the key when the plugin connects
+> 3. Go to Settings > API Keys and create a key
+> 4. Add to your shell profile (~/.zshrc or ~/.bashrc): export CODEROCKET_API_KEY=crk_your_key_here
+> 5. Restart Claude Code (the MCP server reads the key from your shell environment on startup)
+
+Never tell the user that Claude Code will ask them for the key. It cannot: the MCP server
+reads `CODEROCKET_API_KEY` from the environment once, at startup, and starts successfully
+without it. There is no interactive entry path — the shell profile is the only route.
 
 ### Step 2: List repositories
 Call `list_repos` to show the user their connected repositories. Present them as a numbered list showing:

@@ -44,6 +44,60 @@ change must bump the version**, or it may not reach users.
 
 ---
 
+## [1.2.1] — 2026-07-29
+
+Documentation correctness. Removes the last two places that told users to wait for an
+API-key prompt that cannot arrive, fixes a verification step that can pass while setup is
+broken, and adds CI so neither can come back. Pins `@mlgraham/coderocket-mcp@1.0.2`
+(unchanged).
+
+### Fixed
+
+- **`commands/deploy.md` and `commands/status.md` no longer claim Claude Code will ask for
+  the key.** 1.1.0 fixed this claim in the README and recorded it as fixed, but both slash
+  commands still carried it — `deploy.md` as *"Claude Code will prompt you to enter the key
+  when the plugin connects"*, `status.md` as *"Set `CODEROCKET_API_KEY` when Claude Code
+  prompts for it"*. These are the instructions the model reads and repeats to the user
+  during the exact failure they describe, so a user hitting an auth error was told to wait
+  for a prompt that does not exist. Both now carry the setup text verbatim from the MCP
+  server's own `handleHealthCheck()` — one wording, one source of truth — plus an explicit
+  instruction to the model never to promise a prompt.
+
+  This patch has now been scoped wrong twice, both times because the fix list came from a
+  previous summary rather than from a grep of the tree. The guard below exists so a summary
+  can never again be the thing that decides the patch is complete.
+
+- **`README.md` verified the wrong thing.** Setup and troubleshooting both used
+  `echo $CODEROCKET_API_KEY` to confirm the key was in place. `echo` prints a shell
+  variable whether or not it was ever exported — so `CODEROCKET_API_KEY=crk_...` without
+  `export` prints the key, looks like success, and hands the MCP server nothing. Both now
+  use `printenv CODEROCKET_API_KEY`, which reads only the exported environment (the same
+  thing Claude Code passes to the server) and exits non-zero when it is absent. The
+  troubleshooting steps also state the ordering explicitly: export first, then launch
+  Claude Code from that shell — exporting into a shell Claude Code is already running in
+  does nothing until restart.
+
+### Added
+
+- **`.github/workflows/content-guard.yml`** — the repository's first CI workflow. Greps the
+  tree on every push and pull request and fails if `will prompt you`, `Claude Code prompts`,
+  `prompt you to enter`, or `echo $CODEROCKET_API_KEY` reappear. It runs over the whole tree
+  — so files that do not exist yet are covered too — with two deliberate exemptions:
+  `.github/workflows/`, or the guard matches its own pattern list, and this changelog, which
+  has to quote the removed wording verbatim in order to record it. The patterns are written
+  narrowly enough to leave the Cursor notes below alone: Cursor genuinely does prompt via
+  its `variables` schema, and saying so is not the defect.
+
+### Notes
+
+- Documentation only — no change to the MCP server pin, the manifests' behaviour, or any
+  tool. The version bump exists because the plugin cache is keyed on `version`: without it,
+  an already-installed user keeps loading the cached 1.2.0 copy and never sees the fix.
+  Bumped in both `.claude-plugin/plugin.json` and `.cursor-plugin/plugin.json`, per the
+  release checklist above.
+
+---
+
 ## [1.2.0] — 2026-07-28
 
 Adds a Cursor manifest alongside the Claude Code one, and the LICENSE file the
@@ -181,6 +235,7 @@ Pinned `@mlgraham/coderocket-mcp@1.0.1`.
 
 Initial release. Analyze a repository, generate a GitHub Actions workflow, open a PR.
 
+[1.2.1]: https://github.com/mlgraham/coderocket-plugin/releases/tag/coderocket--v1.2.1
 [1.2.0]: https://github.com/mlgraham/coderocket-plugin/releases/tag/coderocket--v1.2.0
 [1.1.0]: https://github.com/mlgraham/coderocket-plugin/releases/tag/coderocket--v1.1.0
 [1.0.1]: https://github.com/mlgraham/coderocket-plugin/compare/f3d62e1...f70fb4b
