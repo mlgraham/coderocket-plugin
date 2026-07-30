@@ -51,28 +51,45 @@ declaration and the Cursor manifest from `main`, so this branch presents exactly
 `coderocket` MCP server. Pins `@mlgraham/coderocket-mcp@1.0.2` (unchanged). No change to
 command or skill behaviour.
 
-### Why
+### Correction — 2026-07-30
 
-The Anthropic community marketplace pins this repo by commit SHA. The automated bump PR
-for 1.2.0 ([#1556](https://github.com/anthropics/claude-plugins-community/pull/1556)) passed
-both automated checks and then sat unmerged while its immediate neighbours — PRs 1548–1555
-and 1557 — were all merged by a maintainer within the same hour. A contiguous run of merges
-with exactly one gap is a deliberate skip, not queue position or a batch cap, and this repo
-is not on the marketplace's freeze list.
+**This release was published with a false rationale, corrected here the next day. Nothing
+was blocking the plugin; the removals below are ordinary hygiene, not a fix.**
 
-The likeliest objection is visible in the 1.2.0 diff: it added `mcp.json` **alongside** the
-existing `.mcp.json`, so a single plugin declared a server named `coderocket` twice, each
-copy carrying `CODEROCKET_API_KEY`. Two credential-bearing MCP declarations in one plugin is
-a reasonable thing for a reviewer or a security scan to stop on, and duplicate registration
-is a known Claude Code failure mode regardless of who is reviewing. The same diff also
-introduced `.cursor-plugin/plugin.json`, a competing editor's manifest carrying a
-`displayName` key that the Claude Code validator rejects.
+The original text claimed that marketplace bump PR
+[#1556](https://github.com/anthropics/claude-plugins-community/pull/1556) had been
+"deliberately skipped" by a maintainer, and that the duplicate MCP declaration was the
+likely objection. **Both claims were wrong.** #1556 merged normally at
+`2026-07-29T22:31:52Z`. The bulk of that day's batch merged 17:30–18:39 UTC; the maintainer
+returned later and cleared two stragglers — #1556 and
+[#1531](https://github.com/anthropics/claude-plugins-community/pull/1531) (`agentiqa`).
+Two leftovers, both merged. Nothing was singled out.
 
-Both are removed here rather than defended. This is a hypothesis about the skip, not a
-confirmed cause — no reviewer feedback was given. If the next automated bump PR is skipped
-again, the cause lies elsewhere and the escalation path is the
-[plugin directory submission form](https://clau.de/plugin-directory-submission); pull
-requests opened directly against the marketplace repo are closed automatically.
+The error was inferential, not observational: the gap was real when sampled at 19:47 UTC,
+but that was one snapshot taken mid-queue, and a single observation of an absent event was
+treated as evidence of a decision. Roughly three hours of patience would have shown the
+merge. The lesson is recorded rather than buried, because the reasoning failure is more
+reusable than the packaging change.
+
+For the record, the sequence completed on its own: #1556 (`f70fb4b8 → 04abac35`) merged
+2026-07-29, and [#1577](https://github.com/anthropics/claude-plugins-community/pull/1577)
+(`04abac35 → d8877356`) merged 2026-07-30T17:52:41Z, putting this release on the
+marketplace.
+
+### Why (as it actually stands)
+
+The removals are still correct, on their own merits and independent of any review outcome.
+The 1.2.0 diff added `mcp.json` **alongside** the existing `.mcp.json`, so a single plugin
+declared a server named `coderocket` twice, each copy carrying `CODEROCKET_API_KEY`.
+Duplicate MCP registration is a known Claude Code failure mode. The same diff introduced
+`.cursor-plugin/plugin.json`, a competing editor's manifest carrying a `displayName` key
+that the Claude Code plugin manifest schema rejects. Keeping one editor's packaging on
+`main` and the other on a branch is simply cleaner, and it is what this release does.
+
+Note that the commit message on `d887735` still carries the original mistaken reasoning. It
+is left unamended deliberately — the marketplace pins this repo by commit SHA, and rewriting
+published history to make a past error disappear would be a worse practice than leaving the
+correction visible here.
 
 ### Removed
 
